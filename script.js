@@ -1217,6 +1217,11 @@ function initializeFileEncryption() {
                 }
             }, 300);
             
+            // Extract original file extension
+            const fileNameParts = file.name.split('.');
+            const originalExtension = fileNameParts.length > 1 ? fileNameParts.pop() : '';
+            const baseFileName = fileNameParts.join('.');
+            
             console.log('Reading file...');
             const fileData = await readFileAsArrayBuffer(file);
             console.log('File read successfully, size:', fileData.byteLength);
@@ -1244,11 +1249,21 @@ function initializeFileEncryption() {
             );
             console.log('Data encrypted successfully');
             
-            console.log('Combining data...');
-            const combinedData = new Uint8Array(salt.length + iv.length + encryptedData.byteLength);
+            // Create TextEncoder to convert extension string to bytes
+            const encoder = new TextEncoder();
+            const extensionBytes = encoder.encode(originalExtension);
+            
+            // Create a Uint8Array to store the extension length (1 byte) and the extension
+            const extensionData = new Uint8Array(1 + extensionBytes.length);
+            extensionData[0] = extensionBytes.length; // First byte is the length of the extension
+            extensionData.set(extensionBytes, 1); // Rest of the bytes are the extension
+            
+            console.log('Combining data with extension info...');
+            const combinedData = new Uint8Array(salt.length + iv.length + extensionData.length + encryptedData.byteLength);
             combinedData.set(salt, 0);
             combinedData.set(iv, salt.length);
-            combinedData.set(new Uint8Array(encryptedData), salt.length + iv.length);
+            combinedData.set(extensionData, salt.length + iv.length);
+            combinedData.set(new Uint8Array(encryptedData), salt.length + iv.length + extensionData.length);
             console.log('Data combined successfully, final size:', combinedData.byteLength);
             
             // Set progress to 95% before download
@@ -1259,7 +1274,8 @@ function initializeFileEncryption() {
             
             console.log('Starting download...');
             try {
-                await downloadFile(combinedData, `${file.name}.encrypted`, encryptStatus);
+                // Use only the base filename with .encrypted extension
+                await downloadFile(combinedData, `${baseFileName}.encrypted`, encryptStatus);
                 console.log('Download initiated via downloadFile function.');
                 
                 // Set progress to 100% on success
@@ -1326,30 +1342,17 @@ A manual download link might have been created in the status area. Please check 
                 }
             }, 300);
             
-            let originalFileName = file.name.replace('.encrypted', '');
-            
-            // Handle case where file might not have .encrypted extension
-            if (originalFileName === file.name) {
-                // First check if it ends with .encrypted.txt (mobile browser issue)
-                if (file.name.endsWith('.encrypted.txt')) {
-                    originalFileName = file.name.substring(0, file.name.length - 13); // Remove .encrypted.txt
-                } 
-                // Then check for standard .encrypted extension
-                else if (file.name.endsWith('.encrypted')) {
-                    originalFileName = file.name.substring(0, file.name.length - 10); // Remove .encrypted
-                }
-                // Fallback to removing the last extension if no encrypted extension found
-                else {
-                    const lastDotIndex = file.name.lastIndexOf('.');
-                    if (lastDotIndex !== -1) {
-                        originalFileName = file.name.substring(0, lastDotIndex);
-                    }
-                }
+            // Extract base filename (without .encrypted extension)
+            let baseFileName = file.name;
+            if (file.name.endsWith('.encrypted')) {
+                baseFileName = file.name.substring(0, file.name.length - 10);
+            } else if (file.name.endsWith('.encrypted.txt')) {
+                baseFileName = file.name.substring(0, file.name.length - 14);
             }
             
             console.log('Starting decryption process...');
-            const decryptedData = await decryptFile(file, decryptPassword.value);
-            console.log('File decrypted successfully, size:', decryptedData.byteLength);
+            const result = await decryptFile(file, decryptPassword.value);
+            console.log('File decrypted successfully, size:', result.data.byteLength);
             
             // Set progress to 95% before download
             updateProgress(decryptStatus, 95);
@@ -1357,9 +1360,15 @@ A manual download link might have been created in the status area. Please check 
             // Clear progress interval
             clearInterval(progressInterval);
             
+            // Construct final filename with original extension if available
+            let finalFileName = baseFileName;
+            if (result.extension) {
+                finalFileName = `${baseFileName}.${result.extension}`;
+            }
+            
             console.log('Starting download of decrypted file...');
             try {
-                await downloadFile(decryptedData, originalFileName, decryptStatus);
+                await downloadFile(result.data, finalFileName, decryptStatus);
                 console.log('Download initiated via downloadFile function for decrypted file.');
                 
                 // Set progress to 100% on success
@@ -1625,6 +1634,10 @@ A manual download link might have been created in the status area. Please check 
      * Uses Web Crypto API for secure encryption
      */
     async function encryptFile(file, password) {
+        // Extract original file extension
+        const fileNameParts = file.name.split('.');
+        const originalExtension = fileNameParts.length > 1 ? fileNameParts.pop() : '';
+        
         // Read the file
         const fileData = await readFileAsArrayBuffer(file);
         
@@ -1645,11 +1658,21 @@ A manual download link might have been created in the status area. Please check 
             fileData
         );
         
-        // Combine salt, IV, and encrypted data into one array
-        const combinedData = new Uint8Array(salt.length + iv.length + encryptedData.byteLength);
+        // Create TextEncoder to convert extension string to bytes
+        const encoder = new TextEncoder();
+        const extensionBytes = encoder.encode(originalExtension);
+        
+        // Create a Uint8Array to store the extension length (1 byte) and the extension
+        const extensionData = new Uint8Array(1 + extensionBytes.length);
+        extensionData[0] = extensionBytes.length; // First byte is the length of the extension
+        extensionData.set(extensionBytes, 1); // Rest of the bytes are the extension
+        
+        // Combine salt, IV, extension data, and encrypted data into one array
+        const combinedData = new Uint8Array(salt.length + iv.length + extensionData.length + encryptedData.byteLength);
         combinedData.set(salt, 0);
         combinedData.set(iv, salt.length);
-        combinedData.set(new Uint8Array(encryptedData), salt.length + iv.length);
+        combinedData.set(extensionData, salt.length + iv.length);
+        combinedData.set(new Uint8Array(encryptedData), salt.length + iv.length + extensionData.length);
         
         return combinedData;
     }
@@ -1665,14 +1688,35 @@ A manual download link might have been created in the status area. Please check 
             const fileBytes = new Uint8Array(fileData);
             
             // Validate minimum file size (salt + iv = 28 bytes)
-            if (fileBytes.length < 28) {
+            if (fileBytes.length < 29) {
                 throw new Error('Invalid encrypted file: File is too small');
             }
             
-            // Extract salt, IV, and encrypted data
+            // Extract salt and IV
             const salt = fileBytes.slice(0, 16);
             const iv = fileBytes.slice(16, 28);
-            const encryptedData = fileBytes.slice(28);
+            
+            // Extract extension information
+            const extensionLength = fileBytes[28]; // First byte after IV is extension length
+            let originalExtension = '';
+            
+            if (extensionLength > 0 && extensionLength < 20) { // Add a reasonable max length check
+                // Extract the extension bytes
+                const extensionBytes = fileBytes.slice(29, 29 + extensionLength);
+                // Convert extension bytes back to string
+                const decoder = new TextDecoder();
+                originalExtension = decoder.decode(extensionBytes);
+            }
+            
+            // Calculate the start of the actual encrypted data
+            const dataStart = 29 + extensionLength;
+            
+            // Ensure there's enough data
+            if (fileBytes.length <= dataStart) {
+                throw new Error('Invalid encrypted file: No encrypted data found');
+            }
+            
+            const encryptedData = fileBytes.slice(dataStart);
             
             // Validate encrypted data exists
             if (encryptedData.length === 0) {
@@ -1692,7 +1736,10 @@ A manual download link might have been created in the status area. Please check 
                 encryptedData
             );
             
-            return new Uint8Array(decryptedData);
+            return {
+                data: new Uint8Array(decryptedData),
+                extension: originalExtension
+            };
         } catch (error) {
             if (error.name === 'OperationError') {
                 throw new Error('Incorrect password or corrupted file');
