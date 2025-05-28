@@ -1759,8 +1759,51 @@ A manual download link might have been created in the status area. Please check 
         return new Promise((resolve, reject) => {
             try {
                 console.log('Creating blob...');
-                const blob = new Blob([data]);
-                console.log('Blob created, size:', blob.size);
+                
+                // Set appropriate MIME type based on filename to prevent .txt being added on mobile
+                let mimeType = 'application/octet-stream'; // Default binary type
+                
+                // If it's an encrypted file, use custom MIME type to prevent .txt extension
+                if (filename.endsWith('.encrypted')) {
+                    mimeType = 'application/x-encrypted';
+                } else {
+                    // Try to determine MIME type from extension
+                    const extension = filename.split('.').pop().toLowerCase();
+                    if (extension) {
+                        const mimeTypes = {
+                            'pdf': 'application/pdf',
+                            'jpg': 'image/jpeg',
+                            'jpeg': 'image/jpeg',
+                            'png': 'image/png',
+                            'gif': 'image/gif',
+                            'doc': 'application/msword',
+                            'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'xls': 'application/vnd.ms-excel',
+                            'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'ppt': 'application/vnd.ms-powerpoint',
+                            'pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                            'txt': 'text/plain',
+                            'csv': 'text/csv',
+                            'html': 'text/html',
+                            'htm': 'text/html',
+                            'json': 'application/json',
+                            'xml': 'application/xml',
+                            'zip': 'application/zip',
+                            'rar': 'application/x-rar-compressed',
+                            'mp3': 'audio/mpeg',
+                            'mp4': 'video/mp4',
+                            'avi': 'video/x-msvideo',
+                            'mov': 'video/quicktime'
+                        };
+                        
+                        if (mimeTypes[extension]) {
+                            mimeType = mimeTypes[extension];
+                        }
+                    }
+                }
+                
+                const blob = new Blob([data], { type: mimeType });
+                console.log('Blob created, size:', blob.size, 'MIME type:', mimeType);
                 
                 console.log('Creating object URL...');
                 const url = URL.createObjectURL(blob);
