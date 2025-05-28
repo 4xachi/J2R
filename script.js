@@ -1330,9 +1330,20 @@ A manual download link might have been created in the status area. Please check 
             
             // Handle case where file might not have .encrypted extension
             if (originalFileName === file.name) {
-                const lastDotIndex = file.name.lastIndexOf('.');
-                if (lastDotIndex !== -1) {
-                    originalFileName = file.name.substring(0, lastDotIndex);
+                // First check if it ends with .encrypted.txt (mobile browser issue)
+                if (file.name.endsWith('.encrypted.txt')) {
+                    originalFileName = file.name.substring(0, file.name.length - 13); // Remove .encrypted.txt
+                } 
+                // Then check for standard .encrypted extension
+                else if (file.name.endsWith('.encrypted')) {
+                    originalFileName = file.name.substring(0, file.name.length - 10); // Remove .encrypted
+                }
+                // Fallback to removing the last extension if no encrypted extension found
+                else {
+                    const lastDotIndex = file.name.lastIndexOf('.');
+                    if (lastDotIndex !== -1) {
+                        originalFileName = file.name.substring(0, lastDotIndex);
+                    }
                 }
             }
             

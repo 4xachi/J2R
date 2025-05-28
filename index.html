@@ -76,6 +76,405 @@
             visibility: hidden !important;
             display: none !important;
         }
+        
+        /* Authentication Styles */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+        
+        .auth-modal-content {
+            background-color: var(--bg-color, #fff);
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+            text-align: center;
+        }
+        
+        .auth-modal-content h2 {
+            color: var(--primary-color, #2196F3);
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 1.8rem;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            line-height: 20px;
+        }
+        
+        .close-modal:hover {
+            color: var(--primary-color, #2196F3);
+        }
+        
+        .auth-form {
+            margin-top: 20px;
+        }
+        
+        .auth-input {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            background-color: var(--input-bg, #f5f5f5);
+            color: var(--text-color, #333);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: inherit;
+        }
+        
+        .auth-input:focus {
+            border-color: var(--primary-color, #2196F3);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+        }
+        
+        .auth-form .input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .auth-form .toggle-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-form .toggle-btn:hover {
+            color: var(--primary-color, #2196F3);
+        }
+        
+        .auth-form .btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .auth-form .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-switch {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 15px;
+            color: var(--text-color, #666);
+        }
+        
+        .auth-switch a {
+            color: var(--primary-color, #2196F3);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.2s ease;
+        }
+        
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+        
+        .auth-error {
+            color: #f44336;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            min-height: 20px;
+            background-color: rgba(244, 67, 54, 0.1);
+            border-radius: 5px;
+            padding: 8px;
+            display: none;
+        }
+        
+        .auth-error:not(:empty) {
+            display: block;
+        }
+        
+        .auth-nav-button {
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: var(--primary-color, #2196F3);
+            color: white !important;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+            display: inline-block;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .auth-nav-button:hover {
+            background-color: #1976D2;
+            transform: translateY(-2px);
+        }
+        
+        .user-display {
+            padding: 5px 10px;
+            font-weight: bold;
+            color: var(--primary-color, #2196F3);
+        }
+        
+        /* Dark mode adjustments */
+        html[data-theme="dark"] .auth-modal-content {
+            background-color: #1f2937;
+        }
+        
+        html[data-theme="dark"] .auth-input {
+            background-color: #374151;
+            color: #e5e7eb;
+            border-color: #4b5563;
+        }
+        
+        /* Services authentication styles */
+        .services-hidden .interactive-services {
+            display: none;
+        }
+        
+        .login-required-message {
+            width: 100%;
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .login-message-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: var(--card-bg, #f5f5f5);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login-message-container h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color, #2196F3);
+        }
+        
+        .login-message-container p {
+            margin-bottom: 20px;
+        }
+        
+        /* Dark mode adjustments for login message */
+        html[data-theme="dark"] .login-message-container {
+            background-color: #1f2937;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Login Gate - Covers entire website until logged in */
+        #login-gate {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color, #f5f5f5);
+            z-index: 100000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        
+        .login-gate-container {
+            max-width: 500px;
+            width: 90%;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .logo-container-gate {
+            margin-bottom: 25px;
+            max-width: 150px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .logo-container-gate img {
+            width: 100%;
+            height: auto;
+        }
+        
+        .login-gate-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .login-gate-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+        
+        .login-gate-tab.active {
+            color: var(--primary-color, #2196F3);
+            border-bottom: 3px solid var(--primary-color, #2196F3);
+        }
+        
+        .gate-form {
+            text-align: left;
+        }
+        
+        .gate-form .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .gate-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .gate-form input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+        
+        .gate-form input:focus {
+            border-color: var(--primary-color, #2196F3);
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+            outline: none;
+        }
+        
+        .gate-form .toggle-btn {
+            position: absolute;
+            right: 10px;
+            top: 37px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .gate-form .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color, #2196F3);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        .gate-form .btn:hover {
+            background-color: #1976D2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .gate-form-error {
+            color: #f44336;
+            margin-top: 15px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+        
+        .gate-form-error.active {
+            display: block;
+            padding: 10px;
+            background-color: rgba(244, 67, 54, 0.1);
+            border-radius: 5px;
+        }
+        
+        /* Dark mode for login gate */
+        html[data-theme="dark"] #login-gate {
+            background-color: #1a202c;
+        }
+        
+        html[data-theme="dark"] .login-gate-container {
+            background-color: #2d3748;
+            color: #e2e8f0;
+        }
+        
+        html[data-theme="dark"] .gate-form label {
+            color: #e2e8f0;
+        }
+        
+        html[data-theme="dark"] .gate-form input {
+            background-color: #4a5568;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        html[data-theme="dark"] .login-gate-tab {
+            color: #a0aec0;
+        }
+        
+        html[data-theme="dark"] .login-gate-tabs {
+            border-bottom-color: #4a5568;
+        }
+
+        /* Responsive styles for sign in and sign up buttons */
+        @media (max-width: 768px) {
+            .nav-links li a#signin-button,
+            .nav-links li a#signup-button {
+                margin: 10px 0;
+                display: block;
+                width: 100%;
+                text-align: center;
+            }
+        }
     </style>
     
     <script>
@@ -121,52 +520,21 @@
     <!-- Favicon with dark/light mode support -->
     <link rel="icon" href="logo_light.ico" type="image/x-icon" id="light-favicon">
     <link rel="icon" href="logo_dark.ico" type="image/x-icon" id="dark-favicon" media="(prefers-color-scheme: dark)">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics-compat.js"></script>
+    
+    <!-- Removed Firebase Authentication Check -->
+    
     <script src="script.js"></script>
+    <!-- Removed firebase-auth.js reference -->
 </head>
 <body>
-    <script>
-        function scrollToSection(sectionId) {
-            console.log('Attempting to scroll to section:', sectionId);
-            const section = document.getElementById(sectionId);
-            
-            if (section) {
-                try {
-                    const hamburger = document.querySelector('.hamburger');
-                    if (hamburger && hamburger.classList.contains('active')) {
-                        hamburger.click();
-                    }
-                    
-                    const headerHeight = document.getElementById('main-header')?.offsetHeight || 0;
-                    const yPosition = section.getBoundingClientRect().top + window.scrollY - headerHeight;
-                    
-                    console.log('Direct scroll to:', sectionId, 'Position:', yPosition);
-                    
-                    window.scrollTo({
-                        top: yPosition,
-                        behavior: 'smooth'
-                    });
-                    
-                    setTimeout(() => {
-                        section.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }, 100);
-                    
-                    return false;
-                } catch (e) {
-                    console.error('Smooth scroll failed:', e);
-                }
-            } else {
-                console.error('Section not found:', sectionId);
-            }
-            
-            console.log('Last resort: Using location.hash for', sectionId);
-            window.location.hash = sectionId;
-            return true;
-        }
-    </script>
-    
+    <!-- Removed Login Gate -->
+
     <div id="security-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:999; pointer-events:none;"></div>
 
     <header id="main-header">
@@ -182,6 +550,8 @@
                     <li><a href="#about" onclick="scrollToSection('about'); return false;">About</a></li>
                     <li><a href="#services" onclick="scrollToSection('services'); return false;">Services</a></li>
                     <li><a href="#gallery" onclick="scrollToSection('gallery'); return false;">Gallery</a></li>
+                    <li><a href="#" id="signin-button" class="btn btn-secondary" style="margin-left: 10px; padding: 8px 16px; font-size: 0.9rem;">Sign In</a></li>
+                    <li><a href="#" id="signup-button" class="btn btn-primary" style="margin-left: 10px; padding: 8px 16px; font-size: 0.9rem;">Sign Up</a></li>
                 </ul>
                 <div class="hamburger">
                     <span></span>
@@ -251,9 +621,9 @@
                 <p class="section-description">Free tools to help you protect your sensitive files and information</p>
             </div>
             
-            <div class="interactive-services">
-                <div class="service-tool">
-                    <div class="tool-header">
+            <div class="interactive-services" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-xl);">
+                <div class="service-tool" style="width: 100%; box-sizing: border-box;">
+                    <div class="tool-header" style="display: flex; flex-wrap: wrap;">
                         <div class="service-icon">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
@@ -265,7 +635,7 @@
                     
                     <p>Check if your password is strong enough to withstand modern hacking attempts.</p>
                     
-                    <div class="tool-container">
+                    <div class="tool-container" style="width: 100%; box-sizing: border-box; overflow-x: hidden;">
                         <div class="input-group">
                             <input type="password" id="password-input" placeholder="Enter your password" class="security-input">
                             <button id="toggle-password" class="toggle-btn">
@@ -297,90 +667,6 @@
                                 <li id="number-check" class="requirement">Contains numbers</li>
                                 <li id="special-check" class="requirement">Contains special characters</li>
                             </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="service-tool">
-                    <div class="tool-header">
-                        <div class="service-icon">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                                <path d="M9 12l2 2 4-4"></path>
-                            </svg>
-                        </div>
-                        <h3>Security Assessment</h3>
-                    </div>
-                    
-                    <p>Answer a few questions to evaluate your current cybersecurity preparedness level.</p>
-                    
-                    <div class="tool-container">
-                        <div id="security-quiz" class="security-quiz">
-                            <div class="quiz-question active" id="question-1">
-                                <p class="question-text">1. Do you use different passwords for different accounts?</p>
-                                <div class="answer-options">
-                                    <button class="answer-btn" data-value="2">Yes, always</button>
-                                    <button class="answer-btn" data-value="1">Sometimes</button>
-                                    <button class="answer-btn" data-value="0">No, I use the same password</button>
-                                </div>
-                            </div>
-                            
-                            <div class="quiz-question" id="question-2">
-                                <p class="question-text">2. Do you have multi-factor authentication enabled on your accounts?</p>
-                                <div class="answer-options">
-                                    <button class="answer-btn" data-value="2">Yes, on all important accounts</button>
-                                    <button class="answer-btn" data-value="1">On some accounts</button>
-                                    <button class="answer-btn" data-value="0">No, I don't use MFA</button>
-                                </div>
-                            </div>
-                            
-                            <div class="quiz-question" id="question-3">
-                                <p class="question-text">3. How often do you update your devices and software?</p>
-                                <div class="answer-options">
-                                    <button class="answer-btn" data-value="2">As soon as updates are available</button>
-                                    <button class="answer-btn" data-value="1">Occasionally</button>
-                                    <button class="answer-btn" data-value="0">Rarely or never</button>
-                                </div>
-                            </div>
-                            
-                            <div class="quiz-question" id="question-4">
-                                <p class="question-text">4. Do you back up your important data?</p>
-                                <div class="answer-options">
-                                    <button class="answer-btn" data-value="2">Yes, regularly and securely</button>
-                                    <button class="answer-btn" data-value="1">Sometimes</button>
-                                    <button class="answer-btn" data-value="0">No, I don't backup my data</button>
-                                </div>
-                            </div>
-                            
-                            <div class="quiz-question" id="question-5">
-                                <p class="question-text">5. Do you verify the security of websites before entering sensitive information?</p>
-                                <div class="answer-options">
-                                    <button class="answer-btn" data-value="2">Yes, always check for HTTPS and security</button>
-                                    <button class="answer-btn" data-value="1">Sometimes</button>
-                                    <button class="answer-btn" data-value="0">No, I don't check</button>
-                                </div>
-                            </div>
-                            
-                            <div id="quiz-results" class="quiz-results">
-                                <h4>Your Security Score:</h4>
-                                <div class="score-container">
-                                    <div class="score-circle">
-                                        <span id="security-score">0</span>/10
-                                    </div>
-                                </div>
-                                <div id="score-message"></div>
-                                <div class="result-actions">
-                                    <button id="restart-quiz" class="btn btn-secondary">Retake Assessment</button>
-                                </div>
-                            </div>
-                            
-                            <div class="quiz-navigation">
-                                <button id="prev-question" class="nav-btn" disabled>Previous</button>
-                                <div class="progress-indicator">
-                                    <span id="current-question">1</span>/5
-                                </div>
-                                <button id="next-question" class="nav-btn" disabled>Next</button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -635,7 +921,45 @@
             if (overlay) {
                 overlay.style.pointerEvents = 'none';
             }
+            
+            // Ensure the auth button works
+            const authButton = document.getElementById('auth-button');
+            if (authButton) {
+                authButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (typeof window.showLoginModal === 'function') {
+                        window.showLoginModal();
+                    } else {
+                        // Fallback if function not found
+                        const loginModal = document.getElementById('login-modal');
+                        if (loginModal) loginModal.style.display = 'block';
+                    }
+                    return false;
+                });
+            }
+            
+            // Add event listeners for signin and signup buttons
+            const signinButton = document.getElementById('signin-button');
+            if (signinButton) {
+                signinButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('Sign In functionality will be implemented here');
+                    return false;
+                });
+            }
+            
+            const signupButton = document.getElementById('signup-button');
+            if (signupButton) {
+                signupButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('Sign Up functionality will be implemented here');
+                    return false;
+                });
+            }
         });
     </script>
+
+    <!-- Removed Login Modal -->
+    <!-- Removed Signup Modal -->
 </body>
 </html> 
