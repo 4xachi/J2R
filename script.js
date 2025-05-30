@@ -1667,12 +1667,16 @@ A manual download link might have been created in the status area. Please check 
         extensionData[0] = extensionBytes.length; // First byte is the length of the extension
         extensionData.set(extensionBytes, 1); // Rest of the bytes are the extension
         
-        // Combine salt, IV, extension data, and encrypted data into one array
-        const combinedData = new Uint8Array(salt.length + iv.length + extensionData.length + encryptedData.byteLength);
-        combinedData.set(salt, 0);
-        combinedData.set(iv, salt.length);
-        combinedData.set(extensionData, salt.length + iv.length);
-        combinedData.set(new Uint8Array(encryptedData), salt.length + iv.length + extensionData.length);
+        // Add version byte for future compatibility
+        const version = new Uint8Array([1]); // Version 1 of our file format
+        
+        // Combine version, salt, IV, extension data, and encrypted data into one array
+        const combinedData = new Uint8Array(version.length + salt.length + iv.length + extensionData.length + encryptedData.byteLength);
+        combinedData.set(version, 0);
+        combinedData.set(salt, version.length);
+        combinedData.set(iv, version.length + salt.length);
+        combinedData.set(extensionData, version.length + salt.length + iv.length);
+        combinedData.set(new Uint8Array(encryptedData), version.length + salt.length + iv.length + extensionData.length);
         
         return combinedData;
     }
