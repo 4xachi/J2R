@@ -2343,4 +2343,56 @@ body {
 /* Hide the original toggle buttons */
 .toggle-btn {
     display: none;
+}
+
+.security-features {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 1.5rem;
+}
+
+.security-features li {
+    position: relative;
+    padding-left: 1.8rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.4;
+}
+
+.security-features li:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.25rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%232196F3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'%3E%3C/path%3E%3Cpath d='M2 17l10 5 10-5'%3E%3C/path%3E%3Cpath d='M2 12l10 5 10-5'%3E%3C/path%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.security-features strong {
+    color: var(--primary-color, #2196F3);
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .security-features li:before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2364B5F6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'%3E%3C/path%3E%3Cpath d='M2 17l10 5 10-5'%3E%3C/path%3E%3Cpath d='M2 12l10 5 10-5'%3E%3C/path%3E%3C/svg%3E");
+}
+
+[data-theme="dark"] .security-features strong {
+    color: var(--primary-color-light, #64B5F6);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .security-features li {
+        padding-left: 1.5rem;
+        margin-bottom: 0.6rem;
+    }
+    
+    .security-features li:before {
+        width: 1rem;
+        height: 1rem;
+        top: 0.2rem;
+    }
 } 
